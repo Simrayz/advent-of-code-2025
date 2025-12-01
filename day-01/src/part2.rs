@@ -1,32 +1,27 @@
+use crate::direction::Direction;
+
 pub fn process(input: &str) -> miette::Result<String> {
-    let moves: Vec<i32> = input
-        .lines()
-        .map(|line| {
-            let (direction, number) = line.split_at(1);
-            let value: i32 = number.parse().unwrap();
-            match direction {
-                "L" => -value,
-                "R" => value,
-                _ => 0,
-            }
-        })
-        .collect();
+    let direction_moves = Direction::from_input(input);
     
     let mut count = 0;
     let mut dial = 50;
 
-    for mv in moves {
-        if mv > 0 {
-            let passes = (dial + mv).div_euclid(100);
-            dial = (dial + mv).rem_euclid(100);
-            count += passes;
-        } else {
-            let flipped_dial = (100 - dial).rem_euclid(100);
-            let passes = (flipped_dial - mv).div_euclid(100);
-            count += passes;
-            dial = (dial + mv).rem_euclid(100);
+    for mv in direction_moves {
+        match mv {
+            Direction::Left(v) => {
+                // Convert left move to equivalent right move for counting passes
+                let flipped_dial = (100_i32 - dial).rem_euclid(100);
+                let passes = (flipped_dial + v).div_euclid(100);
+                count += passes;
+                dial = (dial - v).rem_euclid(100);
+            }
+            Direction::Right(v) => {
+                let passes = (dial + v).div_euclid(100);
+                dial = (dial + v).rem_euclid(100);
+                count += passes;
+            }
         }
-    } 
+    }
 
     Ok(count.to_string())
 }
