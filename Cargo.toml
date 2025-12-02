@@ -1,16 +1,30 @@
 [workspace]
-members = ["day-*"]
+members = [
+    "day-*",
+    "day-02",
+]
 resolver = "2"
 
 [workspace.dependencies]
-rayon = "1.10.0"
-glam = "0.29.0"
-tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.18", features = ["fmt", "env-filter"] }
 divan = "0.1.17"
-test-log = { version = "0.2.13", default-features = false, features = [
-    "trace",
-] }
-miette = { version = "7.4", features = ["fancy"] }
 fxhash = "0.2.1"
+glam = "0.29.0"
 itertools = "0.13.0"
+rayon = "1.10.0"
+tracing = "0.1.41"
+
+[workspace.dependencies.miette]
+version = "7.4"
+features = ["fancy"]
+
+[workspace.dependencies.test-log]
+version = "0.2.13"
+features = ["trace"]
+default-features = false
+
+[workspace.dependencies.tracing-subscriber]
+version = "0.3.18"
+features = [
+    "fmt",
+    "env-filter",
+]
