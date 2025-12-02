@@ -8,7 +8,7 @@ mod tests {
 
     #[test_log::test]
     fn test_process() -> miette::Result<()> {
-        let result = process(include_str!("../input-example.txt"));
+        let result = process(include_str!("../inputs/example.txt"));
         assert_eq!("", result?);
         Ok(())
     }
