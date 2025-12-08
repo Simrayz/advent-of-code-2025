@@ -28,6 +28,34 @@ pub fn process(input: &str) -> miette::Result<String> {
     Ok(split_count.to_string())
 }
 
+pub fn process_fast(input: &str) -> miette::Result<String> {
+    let columns = input.lines().next().unwrap().chars().count();
+    let mut counter = vec![0; columns];
+    let mut total_splits = 0;
+
+    input.lines().step_by(2).for_each(|line| {
+        for (x, ch) in line.chars().enumerate() {
+            match ch {
+                'S' => {
+                    counter[x] += 1;
+                },
+                '^' => {
+                    let count = counter[x];
+                    counter[x] = 0;
+                    counter[x - 1] = 1;
+                    counter[x + 1] = 1;
+                    if count > 0 {
+                        total_splits += 1;
+                    }
+                },
+                _ => {}
+            }
+        }
+        // println!("{:?}", counter);
+    });
+    Ok(total_splits.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

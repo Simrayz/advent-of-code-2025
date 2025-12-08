@@ -40,13 +40,38 @@ pub fn process(input: &str) -> miette::Result<String> {
     Ok(last_row_visit_count.to_string())
 }
 
+pub fn process_fast(input: &str) -> miette::Result<String> {
+    let columns = input.lines().next().unwrap().chars().count();
+    let mut counter = vec![0; columns];
+
+    input.lines().step_by(2).for_each(|line| {
+        for (x, ch) in line.chars().enumerate() {
+            match ch {
+                'S' => {
+                    counter[x] += 1;
+                },
+                '^' => {
+                    let count = counter[x];
+                    counter[x] = 0;
+                    counter[x - 1] += count;
+                    counter[x + 1] += count;
+                },
+                _ => {}
+            }
+        }
+    });
+
+    let total_count: usize = counter.iter().sum();
+    Ok(total_count.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test_log::test]
     fn test_process_example() -> miette::Result<()> {
-        let result = process(include_str!("../inputs/example.txt"));
+        let result = process_fast(include_str!("../inputs/example.txt"));
         assert_eq!("40", result?);
         Ok(())
     }
